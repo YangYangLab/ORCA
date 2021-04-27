@@ -1,0 +1,1 @@
+among = @(variable, ranges) variable>=ranges(1) && variables<=ranges(2);
