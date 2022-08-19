@@ -1,1 +1,0 @@
-% code to mask out gpuArray if useGPU==0useGPU = get_option(params, 'useGPU', 1);if ~useGPU, gpuArray = @(x) x; end 

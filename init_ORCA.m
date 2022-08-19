@@ -1,62 +1,38 @@
-%init_ORCA   add all functions to current path
-% 
-%   related to the following ORCA settings:
-%       ORCA.RootPath
+function init_orca(opt)
+% initialization of ORCA, default for online
+%   INIT_ORCA() or INIT_ORCA('online')
+%   INIT_ORCA('online_noui')
+%   INIT_ORCA('offline') 
 
-%   Weihao Sheng, 2020-03-22
-%   Yang Yang's Lab of Neural Basis of Learning and Memory
-%   School of Life Sciences and Technology, ShanghaiTech University,
-%   Shanghai, China
+oldpath = pwd;
 
-% Naming schemes:
-%   variables, VariableLongNames, Struct.VarNames;
-%   functions, some_functions, module_function_target
+cd(fileparts(which(mfilename)))
+addpath('.');
+addpath(genpath('./orca_registration'));
+addpath(genpath('./orca_segmentation'));
+addpath(genpath('./orca_trace_extraction'));
+addpath(genpath('./orca_activity_inference'));
+addpath(genpath('./orca_utils'));
+addpath(genpath('./io'));
 
-global ORCA
-rootLocation = which(mfilename());
-[rootPath, ~,~] = fileparts(rootLocation);
-ORCA.RootPath = rootPath;
+if nargin < 1, opt = ''; end
 
-% session and device specific: everything related to files and devices
-addpath(genpath([rootPath '/session_manager']));
-ORCA.Methods.LoadExperiment = 'load_experiment_Thorlabs';
-ORCA.Methods.LoadData = 'load_recording_raw';
+if strfind(lower(opt),'onlineui')
+    disp 'Initializing ORCA online UI'
+    addpath(genpath('./orcapipe_online'));
+    init_orca_online(true)
+    
+elseif strfind(lower(opt),'offline')
+    disp 'Initializing ORCA offline'
+    addpath(genpath('./orcapipe_offline'));
+    init_orca_offline()
+    
+else
+    disp 'Initializing ORCA online (noUI)'
+    addpath(genpath('./orcapipe_online'));
+    init_orca_online(false)
+    
+end
 
-% image_registration
-addpath(genpath([rootPath '/image_registration']));
-ORCA.Methods.ImageRegistration = 'register_stack_GPU';
-
-% mask_segmentation
-addpath(genpath([rootPath '/mask_segmentation']));
-ORCA.Methods.ImageRegistration = 'register_stack_GPU';
-
-% trace_extraction
-addpath(genpath([rootPath '/trace_extraction']));
-
-% graphics & utilities: plotting, ui, display etc
-addpath(genpath([rootPath '/graphics']));
-addpath(genpath([rootPath '/utilities']));
-
-%%%%%%%% ORCA variable structure %%%%%%%%
-% .RootPath
-%
-% --- Methods to use
-% .Methods.ImageRegistration = 'register_stack_GPU';
-% .Methods.LoadExperiment
-% 
-% --- Experiment space
-% .Experiment.Trial                % trial settings, TASKDEF.Trial
-% .Experiment.Session              % trial settings, TASKDEF.Session
-% .Experiment.Imaging              % acquisition settings, ACQDEF
-% .Experiment.Stimulation          % stimulation descriptions, TASKDEF.Stim
-%
-%
-% --- Online workspace
-% .Online.Functions.Main                % function to call in online mode
-% .Online.ImagesURL = ' ';
-% .Online.Images = []; % where images 
-% .Online.Callback.FileWatcher = 'ThorlabsFileWatcher';
-% .Online.LoadDataOnline = 'ThorlabsLoadRecent';
-% .Online.SLMControl = 'ThorlabsWriteSLM';
-% .Online.UseGPU
-
+cd(oldpath)
+clear oldpath
