@@ -11,7 +11,7 @@
 %    When you are done with that code, run the following line.
 
 global ORCA
-init_orca('online')
+orca_init('online')
 
 %% ---
 % 2. It is totally possible to change ORCA.TrialDef and ORCA.AcqDef in the middle of

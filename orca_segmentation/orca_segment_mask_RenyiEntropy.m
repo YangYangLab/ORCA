@@ -1,6 +1,6 @@
-function mask = RE(data, TRIALDEF, ACQ, a, sig, thradj)
+function mask = RE(data, TRIALDEF, ACQ)
 % ORCA's RenyiEntropy-based algorithm for online trial-based cell segmentation
-%   MASK = orca_segment_mask_RenyiEntropy(DATA, TRIALDEF, ACQ, a, sig, thradj)
+%   MASK = orca_segment_mask_RenyiEntropy(DATA, TRIALDEF, ACQ)
 % For explanations about this algorithm, see the ORCA paper.
 % See also ORCA_SEGMENT_MASK_AMPLIFIER.
 
